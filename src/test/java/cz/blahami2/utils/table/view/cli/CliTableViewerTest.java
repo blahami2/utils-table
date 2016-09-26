@@ -5,9 +5,8 @@
  */
 package cz.blahami2.utils.table.view.cli;
 
-import cz.blahami2.utils.table.model.ITableBuilder;
-import cz.blahami2.utils.table.model.basic.SimpleTableBuilder;
-import cz.blahami2.utils.table.view.ITableViewer;
+import cz.blahami2.utils.table.view.CliTableViewer;
+import cz.blahami2.utils.table.model.DoubleListTableBuilder;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.junit.After;
@@ -16,6 +15,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import cz.blahami2.utils.table.model.TableBuilder;
+import cz.blahami2.utils.table.view.TableViewer;
 
 /**
  *
@@ -52,7 +53,7 @@ public class CliTableViewerTest {
         PrintStream old = System.out;
         System.setOut( new PrintStream( outContent ) );
         System.out.println( "displayTable" );
-        ITableBuilder<Double> builder = new SimpleTableBuilder<>();
+        TableBuilder<Double> builder = new DoubleListTableBuilder<>();
         for ( int i = 0; i < 2; i++ ) {
             for ( int j = 0; j < 1; j++ ) {
                 if ( i != j ) {

@@ -3,24 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.blahami2.utils.table.model.basic;
+package cz.blahami2.utils.table.model;
 
-import cz.blahami2.utils.table.model.ITable;
-import cz.blahami2.utils.table.model.ITableBuilder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  *
  * @author Michael Blaha {@literal <michael.blaha@certicon.cz>}
  */
-public class SimpleTableBuilder<T> implements ITableBuilder<T> {
+public class DoubleListTableBuilder<T> implements TableBuilder<T> {
 
     private final List<List<T>> table = new ArrayList<>();
+    private final List<String> headers = new ArrayList<>();
     private int columnCount = 0;
     private int rowCount = 0;
 
-    public SimpleTableBuilder() {
+    public DoubleListTableBuilder() {
     }
 
     @Override
@@ -47,22 +47,22 @@ public class SimpleTableBuilder<T> implements ITableBuilder<T> {
     }
 
     @Override
-    public <V> void addColumn( List<V> values, ValueExtractor<T, V> valueExtractor ) {
+    public <V> void addColumn( List<V> values, Function<V, T> valueExtractor ) {
         int column = columnCount;
         int row = 0;
         for ( V value : values ) {
-            setCell( row++, column, valueExtractor.extract( value ) );
+            setCell( row++, column, valueExtractor.apply( value ) );
         }
     }
 
     @Override
-    public <V> void addColumns( List<V> values, ValueExtractor<T, V>... valueExtractors ) {
+    public <V> void addColumns( List<V> values, Function<V, T>... valueExtractors ) {
         int lastColumnCount = columnCount;
         int row = 0;
         for ( V value : values ) {
             int column = lastColumnCount;
-            for ( ValueExtractor<T, V> valueExtractor : valueExtractors ) {
-                setCell( row, column++, valueExtractor.extract( value ) );
+            for ( Function<V, T> valueExtractor : valueExtractors ) {
+                setCell( row, column++, valueExtractor.apply( value ) );
             }
             row++;
         }
@@ -78,29 +78,43 @@ public class SimpleTableBuilder<T> implements ITableBuilder<T> {
     }
 
     @Override
-    public <V> void addRow( List<V> values, ValueExtractor<T, V> valueExtractor ) {
+    public <V> void addRow( List<V> values, Function<V, T> valueExtractor ) {
         int column = 0;
         int row = rowCount;
         for ( V value : values ) {
-            setCell( row, column++, valueExtractor.extract( value ) );
+            setCell( row, column++, valueExtractor.apply( value ) );
         }
     }
 
     @Override
-    public <V> void addRows( List<V> values, ValueExtractor<T, V>... valueExtractors ) {
+    public <V> void addRows( List<V> values, Function<V, T>... valueExtractors ) {
         int lastRowCount = rowCount;
         int column = 0;
         for ( V value : values ) {
             int row = lastRowCount;
-            for ( ValueExtractor<T, V> valueExtractor : valueExtractors ) {
-                setCell( row++, column, valueExtractor.extract( value ) );
+            for ( Function<V, T> valueExtractor : valueExtractors ) {
+                setCell( row++, column, valueExtractor.apply( value ) );
             }
             column++;
         }
     }
 
     @Override
-    public ITable<T> build() {
+    public void setHeaders( List<String> headers ) {
+        this.headers.clear();
+        this.headers.addAll( headers );
+    }
+
+    @Override
+    public void setHeader( int column, String header ) {
+        while ( this.headers.size() <= column ) {
+            headers.add( "" );
+        }
+        headers.set( column, header );
+    }
+
+    @Override
+    public Table<T> build() {
         // table is a [row][column] table
         List<List<T>> columns = new ArrayList<>();
         // add columns
@@ -122,7 +136,7 @@ public class SimpleTableBuilder<T> implements ITableBuilder<T> {
             }
             columns.add( newList );
         }
-        return new SimpleTable<>( table, columns );
+        return headers != null ? new DoubleListTable<>( table, columns, headers ) : new DoubleListTable<>( table, columns );
     }
 
 }

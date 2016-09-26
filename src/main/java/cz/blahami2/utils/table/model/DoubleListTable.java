@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.blahami2.utils.table.model.basic;
+package cz.blahami2.utils.table.model;
 
-import cz.blahami2.utils.table.model.ITable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,14 +12,22 @@ import java.util.List;
  *
  * @author Michael Blaha {@literal <michael.blaha@certicon.cz>}
  */
-public class SimpleTable<T> implements ITable<T> {
+public class DoubleListTable<T> implements Table<T> {
 
     private final List<List<T>> rows;
     private final List<List<T>> columns;
+    private final List<String> headers;
 
-    public SimpleTable( List<List<T>> rows, List<List<T>> columns ) {
+    public DoubleListTable( List<List<T>> rows, List<List<T>> columns ) {
         this.rows = rows;
         this.columns = columns;
+        this.headers = null;
+    }
+
+    public DoubleListTable( List<List<T>> rows, List<List<T>> columns, List<String> headers ) {
+        this.rows = rows;
+        this.columns = columns;
+        this.headers = headers;
     }
 
     @Override
@@ -52,6 +59,24 @@ public class SimpleTable<T> implements ITable<T> {
     @Override
     public List<T> getRow( int row ) {
         return new ArrayList<>( rows.get( row ) );
+    }
+
+    @Override
+    public List<String> getHeaders() {
+        if ( !hasHeaders() ) {
+            throw new IllegalStateException( "Headers not set!" );
+        }
+        return new ArrayList<>( headers );
+    }
+
+    @Override
+    public boolean hasHeaders() {
+        return headers != null;
+    }
+
+    @Override
+    public String getHeader( int column ) {
+        return headers.get( column );
     }
 
 }

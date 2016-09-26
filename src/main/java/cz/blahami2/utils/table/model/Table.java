@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Michael Blaha {@literal <michael.blaha@certicon.cz>}
  */
-public interface ITable<T> {
+public interface Table<T> {
 
     public int getColumnCount();
 
@@ -22,4 +22,10 @@ public interface ITable<T> {
     public List<T> getColumn( int column );
 
     public List<T> getRow( int row );
+
+    public List<String> getHeaders();
+
+    public String getHeader( int column );
+
+    public boolean hasHeaders();
 }

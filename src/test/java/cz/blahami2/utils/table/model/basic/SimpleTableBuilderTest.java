@@ -5,8 +5,7 @@
  */
 package cz.blahami2.utils.table.model.basic;
 
-import cz.blahami2.utils.table.model.ITable;
-import cz.blahami2.utils.table.model.ITableBuilder;
+import cz.blahami2.utils.table.model.DoubleListTableBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
@@ -15,6 +14,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import cz.blahami2.utils.table.model.Table;
+import cz.blahami2.utils.table.model.TableBuilder;
 
 /**
  *
@@ -50,9 +51,9 @@ public class SimpleTableBuilderTest {
         int row = 5;
         int column = 5;
         Integer value = 5;
-        SimpleTableBuilder<Integer> instance = new SimpleTableBuilder<>();
+        DoubleListTableBuilder<Integer> instance = new DoubleListTableBuilder<>();
         instance.setCell( row, column, value );
-        ITable<Integer> build = instance.build();
+        Table<Integer> build = instance.build();
         assertEquals( row + 1, build.getRowCount() );
         assertEquals( column + 1, build.getColumnCount() );
         assertEquals( value, build.getCellContent( row, column ) );
@@ -69,9 +70,9 @@ public class SimpleTableBuilderTest {
         for ( int i = 0; i < 10; i++ ) {
             column.add( i );
         }
-        SimpleTableBuilder<Integer> instance = new SimpleTableBuilder<>();
+        DoubleListTableBuilder<Integer> instance = new DoubleListTableBuilder<>();
         instance.addColumn( column );
-        ITable<Integer> build = instance.build();
+        Table<Integer> build = instance.build();
 
         assertEquals( 10, build.getRowCount() );
         assertEquals( 1, build.getColumnCount() );
@@ -88,11 +89,11 @@ public class SimpleTableBuilderTest {
         for ( int i = 0; i < 10; i++ ) {
             column.add( i );
         }
-        SimpleTableBuilder<String> instance = new SimpleTableBuilder<>();
+        DoubleListTableBuilder<String> instance = new DoubleListTableBuilder<>();
         instance.addColumn( column, ( Integer value ) -> {
             return value.toString();
         } );
-        ITable<String> build = instance.build();
+        Table<String> build = instance.build();
 
         assertEquals( 10, build.getRowCount() );
         assertEquals( 1, build.getColumnCount() );
@@ -109,13 +110,13 @@ public class SimpleTableBuilderTest {
         for ( int i = 0; i < 10; i++ ) {
             column.add( i );
         }
-        SimpleTableBuilder<String> instance = new SimpleTableBuilder<>();
+        DoubleListTableBuilder<String> instance = new DoubleListTableBuilder<>();
         instance.addColumns( column, ( Integer value ) -> {
             return value.toString();
         }, ( Integer value ) -> {
             return value.toString() + value.toString();
         } );
-        ITable<String> build = instance.build();
+        Table<String> build = instance.build();
 
         assertEquals( 10, build.getRowCount() );
         assertEquals( 2, build.getColumnCount() );
@@ -132,9 +133,9 @@ public class SimpleTableBuilderTest {
         for ( int i = 0; i < 10; i++ ) {
             row.add( i );
         }
-        SimpleTableBuilder<Integer> instance = new SimpleTableBuilder<>();
+        DoubleListTableBuilder<Integer> instance = new DoubleListTableBuilder<>();
         instance.addRow( row );
-        ITable<Integer> build = instance.build();
+        Table<Integer> build = instance.build();
 
         assertEquals( 1, build.getRowCount() );
         assertEquals( 10, build.getColumnCount() );
@@ -151,11 +152,11 @@ public class SimpleTableBuilderTest {
         for ( int i = 0; i < 10; i++ ) {
             row.add( i );
         }
-        SimpleTableBuilder<String> instance = new SimpleTableBuilder<>();
+        DoubleListTableBuilder<String> instance = new DoubleListTableBuilder<>();
         instance.addRow( row, ( Integer value ) -> {
             return value.toString();
         } );
-        ITable<String> build = instance.build();
+        Table<String> build = instance.build();
 
         assertEquals( 1, build.getRowCount() );
         assertEquals( 10, build.getColumnCount() );
@@ -172,13 +173,13 @@ public class SimpleTableBuilderTest {
         for ( int i = 0; i < 10; i++ ) {
             row.add( i );
         }
-        SimpleTableBuilder<String> instance = new SimpleTableBuilder<>();
+        DoubleListTableBuilder<String> instance = new DoubleListTableBuilder<>();
         instance.addRows( row, ( Integer value ) -> {
             return value.toString();
         }, ( Integer value ) -> {
             return value.toString() + value.toString();
         } );
-        ITable<String> build = instance.build();
+        Table<String> build = instance.build();
 
         assertEquals( 2, build.getRowCount() );
         assertEquals( 10, build.getColumnCount() );
@@ -199,10 +200,10 @@ public class SimpleTableBuilderTest {
         for ( int i = 0; i < 20; i++ ) {
             row.add( i );
         }
-        SimpleTableBuilder<Integer> instance = new SimpleTableBuilder<>();
+        DoubleListTableBuilder<Integer> instance = new DoubleListTableBuilder<>();
         instance.addColumn( column );
         instance.addRow( row );
-        ITable<Integer> build = instance.build();
+        Table<Integer> build = instance.build();
 
         assertEquals( 11, build.getRowCount() ); // 10 + the added one
         assertEquals( 20, build.getColumnCount() );

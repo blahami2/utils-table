@@ -3,17 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.blahami2.utils.table.view;
+package cz.blahami2.utils.table.data;
 
-import cz.blahami2.utils.table.model.ITable;
+import java.io.File;
+import java.io.IOException;
+import cz.blahami2.utils.table.model.Table;
 
 /**
  *
  * @author Michael Blaha {@literal <michael.blaha@certicon.cz>}
  */
-public interface ITableViewer {
+public interface TableExporter {
 
-    public <T> void displayTable( ITable<T> table, StringExtractor<T> stringExtractor );
+    public <T> void export( File destination, Table<T> table, StringExtractor<T> stringExtractor ) throws IOException;
 
     public interface StringExtractor<T> {
 
@@ -27,5 +29,4 @@ public interface ITableViewer {
 
         public String nullSafeExtract( T value );
     }
-    // DrawableExtractor?
 }
