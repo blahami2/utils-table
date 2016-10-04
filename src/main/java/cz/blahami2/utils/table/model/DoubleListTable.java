@@ -6,7 +6,9 @@
 package cz.blahami2.utils.table.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  *
@@ -71,12 +73,54 @@ public class DoubleListTable<T> implements Table<T> {
 
     @Override
     public boolean hasHeaders() {
+        System.out.println( "headers: " + headers );
         return headers != null;
     }
 
     @Override
     public String getHeader( int column ) {
         return headers.get( column );
+    }
+
+    @Override
+    public Table filter( Predicate<List<T>> filteringCondition ) {
+        DoubleListTableBuilder<T> builder = new DoubleListTableBuilder<>();
+        if ( hasHeaders() ) {
+            builder.setHeaders( headers );
+        }
+        rows.stream().filter( filteringCondition ).forEach( ( row ) -> {
+            builder.addRow( row );
+        } );
+        return builder.build();
+    }
+
+    @Override
+    public Table filter( int column, Predicate<T> filteringCondition ) {
+        DoubleListTableBuilder<T> builder = new DoubleListTableBuilder<>();
+        if ( hasHeaders() ) {
+            builder.setHeaders( headers );
+        }
+        rows.stream().filter( ( row ) -> ( filteringCondition.test( row.get( column ) ) ) ).forEach( ( row ) -> {
+            builder.addRow( row );
+        } );
+        return builder.build();
+    }
+
+    @Override
+    public Table subtable( int firstRow, int lastRow ) {
+        DoubleListTableBuilder<T> builder = new DoubleListTableBuilder<>();
+        if ( hasHeaders() ) {
+            builder.setHeaders( headers );
+        }
+        for ( int i = firstRow; i <= lastRow; i++ ) {
+            builder.addRow( rows.get( i ) );
+        }
+        return builder.build();
+    }
+
+    @Override
+    public String toString() {
+        return toString( x -> x.toString() );
     }
 
 }

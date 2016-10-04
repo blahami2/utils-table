@@ -6,6 +6,8 @@
 package cz.blahami2.utils.table.model;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  *
@@ -27,5 +29,31 @@ public interface Table<T> {
 
     public String getHeader( int column );
 
+    public Table filter( Predicate<List<T>> filteringCondition );
+
+    public Table filter( int column, Predicate<T> filteringCondition );
+
+    public Table subtable( int firstRow, int lastRow );
+
     public boolean hasHeaders();
+
+    default public String toString( Function<T, String> mapper ) {
+        StringBuilder sb = new StringBuilder();
+        sb.append( getClass().getSimpleName() ).append( "{\n" );
+        if ( hasHeaders() ) {
+            getHeaders().stream().forEach( ( header ) -> {
+                sb.append( header ).append( "," );
+            } );
+            sb.append( "\n" );
+        }
+        for ( int i = 0; i < getRowCount(); i++ ) {
+            for ( int j = 0; j < getColumnCount(); j++ ) {
+                sb.append( mapper.apply( getCellContent( i, j ) ) ).append( "," );
+            }
+            sb.append( "\n" );
+        }
+        sb.append( "}\n" );
+        return sb.toString();
+    }
+
 }

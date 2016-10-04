@@ -136,7 +136,7 @@ public class DoubleListTableBuilder<T> implements TableBuilder<T> {
             }
             columns.add( newList );
         }
-        return headers != null ? new DoubleListTable<>( table, columns, headers ) : new DoubleListTable<>( table, columns );
+        return !headers.isEmpty() ? new DoubleListTable<>( table, columns, headers ) : new DoubleListTable<>( table, columns );
     }
 
 }
