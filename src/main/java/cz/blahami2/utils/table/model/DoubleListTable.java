@@ -73,7 +73,6 @@ public class DoubleListTable<T> implements Table<T> {
 
     @Override
     public boolean hasHeaders() {
-        System.out.println( "headers: " + headers );
         return headers != null;
     }
 
