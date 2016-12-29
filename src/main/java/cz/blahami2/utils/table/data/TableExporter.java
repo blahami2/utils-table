@@ -16,6 +16,8 @@ import cz.blahami2.utils.table.model.Table;
 public interface TableExporter {
 
     public <T> void export( File destination, Table<T> table, StringExtractor<T> stringExtractor ) throws IOException;
+    
+    public <T> void export( File destination, Table<T> table, StringExtractor<T> stringExtractor, boolean append ) throws IOException;
 
     public interface StringExtractor<T> {
 

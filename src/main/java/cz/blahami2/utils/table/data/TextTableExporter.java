@@ -30,8 +30,14 @@ public class TextTableExporter implements TableExporter {
 
     @Override
     public <T> void export( File destination, Table<T> table, StringExtractor<T> stringExtractor ) throws IOException {
-        try ( FileWriter fw = new FileWriter( destination ) ) {
-            if ( table.hasHeaders() ) {
+        export( destination, table, stringExtractor, false );
+    }
+
+    @Override
+    public <T> void export( File destination, Table<T> table, StringExtractor<T> stringExtractor, boolean append ) throws IOException {
+        append = append ? destination.exists() : false; // if the file does not exist, make append false in order to add headers as well
+        try ( FileWriter fw = new FileWriter( destination, append ) ) {
+            if ( !append && table.hasHeaders() ) {
                 for ( String header : table.getHeaders() ) {
                     fw.write( header );
                     fw.write( delimiter );
