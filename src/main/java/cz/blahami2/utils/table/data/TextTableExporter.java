@@ -9,6 +9,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import cz.blahami2.utils.table.model.Table;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -16,6 +20,7 @@ import cz.blahami2.utils.table.model.Table;
  */
 public class TextTableExporter implements TableExporter {
 
+    private static final String DEFAULT_NEWLINE = "\n";
     private static final String DEFAULT_DELIMITER = "\t";
 
     private final String delimiter;
@@ -29,28 +34,21 @@ public class TextTableExporter implements TableExporter {
     }
 
     @Override
-    public <T> void export( File destination, Table<T> table, StringExtractor<T> stringExtractor ) throws IOException {
-        export( destination, table, stringExtractor, false );
-    }
-
-    @Override
-    public <T> void export( File destination, Table<T> table, StringExtractor<T> stringExtractor, boolean append ) throws IOException {
-        append = append ? destination.exists() : false; // if the file does not exist, make append false in order to add headers as well
-        try ( FileWriter fw = new FileWriter( destination, append ) ) {
+    public <T> void export( OutputStream destination, Table<T> table, StringExtractor<T> stringExtractor, boolean append ) throws IOException {
+//        append = append ? destination.exists() : false; // if the file does not exist, make append false in order to add headers as well
+        try ( OutputStreamWriter osw = new OutputStreamWriter( destination ) ) {
             if ( !append && table.hasHeaders() ) {
-                for ( String header : table.getHeaders() ) {
-                    fw.write( header );
-                    fw.write( delimiter );
-                }
-                fw.write( "\n" );
+                osw.write( table.getHeaders().stream().collect( Collectors.joining( delimiter ) ) );
+                osw.write( DEFAULT_NEWLINE );
             }
-            for ( int i = 0; i < table.getRowCount(); i++ ) {
-                for ( int j = 0; j < table.getColumnCount(); j++ ) {
-                    fw.write( stringExtractor.extract( table.getCellContent( i, j ) ) );
-                    fw.write( delimiter );
-                }
-                fw.write( "\n" );
-            }
+            osw.write(
+                    IntStream.range( 0, table.getRowCount() ).mapToObj( i -> table.getRow( i ) )
+                    .map( row -> row.stream()
+                            .map( cell -> stringExtractor.extract( cell ) )
+                            .collect( Collectors.joining( delimiter ) )
+                    ).collect( Collectors.joining( DEFAULT_NEWLINE ) )
+                    + DEFAULT_NEWLINE
+            );
         }
     }
 

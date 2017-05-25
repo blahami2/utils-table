@@ -11,27 +11,29 @@ import java.util.function.Function;
 /**
  *
  * @author Michael Blaha {@literal <michael.blaha@certicon.cz>}
+ * @param <T> type of the data in table
+ * @param <B> flow design identification of the extending class
  */
-public interface TableBuilder<T> {
+public interface TableBuilder<T, B extends TableBuilder<T, B>> {
 
-    public void setCell( int row, int column, T value );
+    B setCell( int row, int column, T value );
 
-    public void addColumn( List<T> values );
+    B addColumn( List<T> values );
 
-    public <V> void addColumn( List<V> values, Function<V, T> valueExtractors );
+    <V> B addColumn( List<V> values, Function<V, T> valueExtractors );
 
-    public <V> void addColumns( List<V> values, Function<V, T>... valueExtractors );
+    <V> B addColumns( List<V> values, Function<V, T>... valueExtractors );
 
-    public void addRow( List<T> values );
+    B addRow( List<T> values );
 
-    public <V> void addRow( List<V> values, Function<V, T> valueExtractor );
+    <V> B addRow( List<V> values, Function<V, T> valueExtractor );
 
-    public <V> void addRows( List<V> values, Function<V, T>... valueExtractors );
+    <V> B addRows( List<V> values, Function<V, T>... valueExtractors );
 
-    public void setHeaders( List<String> headers );
+    B setHeaders( List<String> headers );
 
-    public void setHeader( int column, String header );
+    B setHeader( int column, String header );
 
-    public Table<T> build();
+    Table<T> build();
 
 }
