@@ -13,7 +13,7 @@ import java.util.function.Function;
  *
  * @author Michael Blaha {@literal <michael.blaha@certicon.cz>}
  */
-public class DoubleListTableBuilder<T> implements TableBuilder<T> {
+public class DoubleListTableBuilder<T> implements TableBuilder<T, DoubleListTableBuilder<T>> {
 
     private final List<List<T>> table = new ArrayList<>();
     private final List<String> headers = new ArrayList<>();
@@ -24,7 +24,7 @@ public class DoubleListTableBuilder<T> implements TableBuilder<T> {
     }
 
     @Override
-    public void setCell( int row, int column, T value ) {
+    public DoubleListTableBuilder<T> setCell( int row, int column, T value ) {
         while ( table.size() <= row ) {
             table.add( new ArrayList<>() );
         }
@@ -35,28 +35,31 @@ public class DoubleListTableBuilder<T> implements TableBuilder<T> {
         rowList.set( column, value );
         rowCount = Math.max( rowCount, row + 1 );
         columnCount = Math.max( columnCount, column + 1 );
+        return this;
     }
 
     @Override
-    public void addColumn( List<T> values ) {
+    public DoubleListTableBuilder<T> addColumn( List<T> values ) {
         int column = columnCount;
         int row = 0;
         for ( T value : values ) {
             setCell( row++, column, value );
         }
+        return this;
     }
 
     @Override
-    public <V> void addColumn( List<V> values, Function<V, T> valueExtractor ) {
+    public <V> DoubleListTableBuilder<T> addColumn( List<V> values, Function<V, T> valueExtractor ) {
         int column = columnCount;
         int row = 0;
         for ( V value : values ) {
             setCell( row++, column, valueExtractor.apply( value ) );
         }
+        return this;
     }
 
     @Override
-    public <V> void addColumns( List<V> values, Function<V, T>... valueExtractors ) {
+    public <V> DoubleListTableBuilder<T> addColumns( List<V> values, Function<V, T>... valueExtractors ) {
         int lastColumnCount = columnCount;
         int row = 0;
         for ( V value : values ) {
@@ -66,28 +69,31 @@ public class DoubleListTableBuilder<T> implements TableBuilder<T> {
             }
             row++;
         }
+        return this;
     }
 
     @Override
-    public void addRow( List<T> values ) {
+    public DoubleListTableBuilder<T> addRow( List<T> values ) {
         int column = 0;
         int row = rowCount;
         for ( T value : values ) {
             setCell( row, column++, value );
         }
+        return this;
     }
 
     @Override
-    public <V> void addRow( List<V> values, Function<V, T> valueExtractor ) {
+    public <V> DoubleListTableBuilder<T> addRow( List<V> values, Function<V, T> valueExtractor ) {
         int column = 0;
         int row = rowCount;
         for ( V value : values ) {
             setCell( row, column++, valueExtractor.apply( value ) );
         }
+        return this;
     }
 
     @Override
-    public <V> void addRows( List<V> values, Function<V, T>... valueExtractors ) {
+    public <V> DoubleListTableBuilder<T> addRows( List<V> values, Function<V, T>... valueExtractors ) {
         int lastRowCount = rowCount;
         int column = 0;
         for ( V value : values ) {
@@ -97,20 +103,23 @@ public class DoubleListTableBuilder<T> implements TableBuilder<T> {
             }
             column++;
         }
+        return this;
     }
 
     @Override
-    public void setHeaders( List<String> headers ) {
+    public DoubleListTableBuilder<T> setHeaders( List<String> headers ) {
         this.headers.clear();
         this.headers.addAll( headers );
+        return this;
     }
 
     @Override
-    public void setHeader( int column, String header ) {
+    public DoubleListTableBuilder<T> setHeader( int column, String header ) {
         while ( this.headers.size() <= column ) {
             headers.add( "" );
         }
         headers.set( column, header );
+        return this;
     }
 
     @Override

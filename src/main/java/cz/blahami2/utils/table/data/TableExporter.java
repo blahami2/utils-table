@@ -5,9 +5,9 @@
  */
 package cz.blahami2.utils.table.data;
 
-import java.io.File;
 import java.io.IOException;
 import cz.blahami2.utils.table.model.Table;
+import java.io.OutputStream;
 
 /**
  *
@@ -15,9 +15,15 @@ import cz.blahami2.utils.table.model.Table;
  */
 public interface TableExporter {
 
-    public <T> void export( File destination, Table<T> table, StringExtractor<T> stringExtractor ) throws IOException;
+    default <T> void export(OutputStream destination, Table<String> table) throws IOException {
+        export(destination, table, str -> str, false);
+    }
+
+    default <T> void export(OutputStream destination, Table<T> table, StringExtractor<T> stringExtractor) throws IOException {
+        export(destination, table, stringExtractor, false);
+    }
     
-    public <T> void export( File destination, Table<T> table, StringExtractor<T> stringExtractor, boolean append ) throws IOException;
+    public <T> void export( OutputStream destination, Table<T> table, StringExtractor<T> stringExtractor, boolean append ) throws IOException;
 
     public interface StringExtractor<T> {
 

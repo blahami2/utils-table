@@ -53,7 +53,7 @@ public class CliTableViewerTest {
         PrintStream old = System.out;
         System.setOut( new PrintStream( outContent ) );
         System.out.println( "displayTable" );
-        TableBuilder<Double> builder = new DoubleListTableBuilder<>();
+        DoubleListTableBuilder<Double> builder = new DoubleListTableBuilder<>();
         for ( int i = 0; i < 2; i++ ) {
             for ( int j = 0; j < 1; j++ ) {
                 if ( i != j ) {
